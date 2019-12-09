@@ -1,0 +1,6 @@
+argus_camera.egg-info
+__pycache__
+/argus_camera/cpp.py
+/argus_camera/cpp_wrap.cxx
+build
+dist

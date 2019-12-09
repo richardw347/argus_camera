@@ -1,28 +1,22 @@
-set(TegraMM_ROOT $ENV{HOME}/tegra_multimedia_api)
-
+set(TegraMM_ROOT /usr/src/tegra_multimedia_api)
 set(TegraMM_FOUND FALSE)
 
 if(EXISTS ${TegraMM_ROOT})
   # set packages
   set(TegraMM_INCLUDE_DIRS ${TegraMM_ROOT}/include ${TegraMM_ROOT}/include/libjpeg-8b /usr/include/libdrm)
   set(TegraMM_INCLUDES ${TegraMM_INCLUDE_DIRS})
+  
+  find_library(ARGUS_LIBRARY NAMES nvargus HINTS /usr/lib/${CMAKE_LIBRARY_ARCHITECTURE}/tegra)
+  find_library(V4L2_LIBRARY NAMES v4l2 HINTS /usr/lib/${CMAKE_LIBRARY_ARCHITECTURE}/tegra)
+  find_library(EGL_LIBRARY EGL HINTS /usr/lib/aarch64-linux-gnu/tegra)
+  find_library(DRM_LIBRARY drm HINTS /usr/lib/aarch64-linux-gnu/tegra)
+
   set(TegraMM_LIBRARY_DIRS /usr/lib/aarch64-linux-gnu/tegra /usr/lib/aarch64-linux-gnu)
-  set(TegraMM_LIBRARIES argus nvjpeg drm nvbuf_utils nvosd EGL v4l2 GLESv2 X11 pthread)
+  set(TegraMM_LIBRARIES ${ARGUS_LIBRARY} ${V4L2_LIBRARY} ${EGL_LIBRARY} ${DRM_LIBRARY} X11 GLESv2)
   file(GLOB TegraMM_COMMON_SOURCES ${TegraMM_ROOT}/samples/common/classes/*.cpp)
 
   include_directories(${TegraMM_INCLUDE_DIRS})
   link_directories(${TegraMM_LIBRARY_DIRS})
-  #add_library(tegra_mm SHARED ${TegraMM_COMMON_SOURCES})
-  #target_link_libraries(tegra_mm ${TegraMM_LIBRARIES})
-
-  #  install(TARGETS tegra_mm
-  #    RUNTIME DESTINATION bin
-  #    LIBRARY DESTINATION lib
-  #    ARCHIVE DESTINATION lib/static)
-
-
-  #set(TegraMM_LIBRARIES ${TegraMM_LIBRARIES} tegra_mm)
-
   set(TegraMM_FOUND TRUE)
 endif()
 

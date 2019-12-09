@@ -7,7 +7,7 @@ class ArgusCamera:
         device_id=0, 
         stream_resolution=(640, 480), 
         video_converter_resolution=(640, 480),
-        frame_duration_range=(long(1e9//30), long(1e9//30)),
+        frame_duration_range=(int(1e9//30), int(1e9//30)),
         source_clip_rect=(0.0, 0.0, 1.0, 1.0),
         sensor_mode=0):
 
