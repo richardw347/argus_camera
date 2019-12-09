@@ -27,4 +27,4 @@ class ArgusCamera:
     def read(self):
         image = np.empty(list(self.video_converter_resolution)[::-1] + [self.channels], np.uint8)
         self.camera.read(image.ctypes.data)
-        return image
+        return image[:,:,:3]
