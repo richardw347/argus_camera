@@ -95,8 +95,8 @@ ArgusCamera *ArgusCamera::createArgusCamera(const ArgusCameraConfig &config, int
   }
 
   // create stream settings
-  auto streamSettings = UniqueObj<OutputStreamSettings>(iCaptureSession->createOutputStreamSettings(NULL));
-  auto iOutputStreamSettings = interface_cast<IOutputStreamSettings>(streamSettings);
+  auto streamSettings = UniqueObj<OutputStreamSettings>(iCaptureSession->createOutputStreamSettings(STREAM_TYPE_EGL));
+  auto iOutputStreamSettings = interface_cast<IEGLOutputStreamSettings>(streamSettings);
   if (!iOutputStreamSettings) {
     if (info) {
       *info = 6; // failed to create stream settings
@@ -115,7 +115,7 @@ ArgusCamera *ArgusCamera::createArgusCamera(const ArgusCameraConfig &config, int
 
   // create stream
   camera->mStream = UniqueObj<OutputStream>(iCaptureSession->createOutputStream(streamSettings.get(), &status));
-  auto iStream = interface_cast<IStream>(camera->mStream);
+  auto iStream = interface_cast<IEGLOutputStream>(camera->mStream);
   if (!iStream) {
     if (info) {
       *info = 7; // failed to create stream
@@ -159,6 +159,7 @@ ArgusCamera *ArgusCamera::createArgusCamera(const ArgusCameraConfig &config, int
     return nullptr;
   }
   auto iSourceSettings = interface_cast<ISourceSettings>(iRequest->getSourceSettings());
+  auto iAutoControlSettings = interface_cast<IAutoControlSettings>(iRequest->getAutoControlSettings());
   status = iSourceSettings->setSensorMode(sensorModes[camera->mConfig.getSensorMode()]);
   if (Argus::STATUS_OK != status) {
     if (info) {
@@ -178,7 +179,76 @@ ArgusCamera *ArgusCamera::createArgusCamera(const ArgusCameraConfig &config, int
     }
     return nullptr;
   }
-  
+  /********************************************************************/
+  //  ADDITIONAL FUNCTION
+
+  // 3. set exposure time
+  status = iSourceSettings->setExposureTimeRange(Argus::Range<uint64_t>(
+    camera->mConfig.getExposureTimeRange()[0],
+    camera->mConfig.getExposureTimeRange()[1]
+  ));
+  if (Argus::STATUS_OK != status) {
+    if (info) {
+      *info = 20;
+    }
+    return nullptr;
+  }
+
+  // set exposure compensation
+  status = iAutoControlSettings->setExposureCompensation(float(
+    camera->mConfig.getExposureCompensation()));
+  if (Argus::STATUS_OK != status) {
+    if (info) {
+      *info = 21;
+    }
+    return nullptr;
+  }
+
+  // set autoexposure regions
+  if (!(camera->mConfig.getAeRegions()).empty()) {
+    vector<Argus::AcRegion> AeRegions;
+    for (vector<float>& AeRegion : camera->mConfig.getAeRegions())
+      AeRegions.push_back(Argus::AcRegion(
+        static_cast<int>(AeRegion[0]),
+        static_cast<int>(AeRegion[1]),
+        static_cast<int>(AeRegion[2]),
+        static_cast<int>(AeRegion[3]),
+        AeRegion[4]
+      ));
+    status = iAutoControlSettings->setAeRegions(AeRegions);
+    if (Argus::STATUS_OK != status) {
+      if (info) {
+        *info = 22;
+      }
+      return nullptr;
+    }
+  }
+
+  // set ae lock
+  status = iAutoControlSettings->setAeLock(float(
+    camera->mConfig.getAeLock()));
+  if (Argus::STATUS_OK != status) {
+    if (info) {
+      *info = 24;
+    }
+    return nullptr;
+  }
+
+  // set gain range
+  status = iSourceSettings->setGainRange(Argus::Range<float>(
+    camera->mConfig.getGainRange()[0],
+    camera->mConfig.getGainRange()[1]
+  ));
+  if (Argus::STATUS_OK != status) {
+    if (info) {
+      *info = 30;
+    }
+    return nullptr;
+  }
+
+  /********************************************************************/
+
+
   // configure stream settings
   auto iStreamSettings = interface_cast<IStreamSettings>(iRequest->getStreamSettings(camera->mStream.get()));
   if (!iStreamSettings) {
@@ -259,7 +329,7 @@ ArgusCamera::~ArgusCamera()
     iCaptureSession->waitForIdle();
   }
 
-  auto iStream = interface_cast<IStream>(mStream);
+  auto iStream = interface_cast<IEGLOutputStream>(mStream);
   if (iStream) {
     iStream->disconnect();
   }
@@ -278,7 +348,7 @@ int ArgusCamera::read(uint8_t *data)
 {
   Argus::Status status;
 
-  auto iStream = interface_cast<IStream>(mStream);
+  auto iStream = interface_cast<IEGLOutputStream>(mStream);
   if (!iStream) {
     return 1; // failed to create stream interface
   }
@@ -313,8 +383,8 @@ int ArgusCamera::read(uint8_t *data)
   );
   fd = iNativeBuffer->createNvBuffer(resolution, 
     NvBufferColorFormat::NvBufferColorFormat_YUV420,
-    NvBufferLayout_Pitch, &status);
-  if (Argus::STATUS_OK != status) {
+    NvBufferLayout_Pitch);
+  if (fd == -1) {
     return 6; // failed to create native buffer
   }
 
