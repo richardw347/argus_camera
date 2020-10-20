@@ -29,6 +29,7 @@ private:
   Argus::UniqueObj<Argus::OutputStream> mStream;
   Argus::UniqueObj<EGLStream::FrameConsumer> mFrameConsumer;
   Argus::UniqueObj<Argus::Request> mRequest;
+  Argus::Interface<Argus::IAutoControlSettings> iAutoControlSettings;
   NvVideoConverter *mVideoConverter;
 };
 
@@ -162,7 +163,7 @@ ArgusCamera *ArgusCamera::createArgusCamera(const ArgusCameraConfig &config, int
     return nullptr;
   }
   auto iSourceSettings = interface_cast<ISourceSettings>(iRequest->getSourceSettings());
-  auto iAutoControlSettings = interface_cast<IAutoControlSettings>(iRequest->getAutoControlSettings());
+  camera->iAutoControlSettings = interface_cast<IAutoControlSettings>(iRequest->getAutoControlSettings());
   status = iSourceSettings->setSensorMode(sensorModes[camera->mConfig.getSensorMode()]);
   if (Argus::STATUS_OK != status) {
     if (info) {
@@ -198,7 +199,7 @@ ArgusCamera *ArgusCamera::createArgusCamera(const ArgusCameraConfig &config, int
   }
 
   // set exposure compensation
-  status = iAutoControlSettings->setExposureCompensation(float(
+  status = camera->iAutoControlSettings->setExposureCompensation(float(
     camera->mConfig.getExposureCompensation()));
   if (Argus::STATUS_OK != status) {
     if (info) {
@@ -218,7 +219,7 @@ ArgusCamera *ArgusCamera::createArgusCamera(const ArgusCameraConfig &config, int
         static_cast<int>(AeRegion[3]),
         AeRegion[4]
       ));
-    status = iAutoControlSettings->setAeRegions(AeRegions);
+    status = camera->iAutoControlSettings->setAeRegions(AeRegions);
     if (Argus::STATUS_OK != status) {
       if (info) {
         *info = 22;
@@ -228,7 +229,7 @@ ArgusCamera *ArgusCamera::createArgusCamera(const ArgusCameraConfig &config, int
   }
 
   // set ae lock
-  status = iAutoControlSettings->setAeLock(float(
+  status = camera->iAutoControlSettings->setAeLock(float(
     camera->mConfig.getAeLock()));
   if (Argus::STATUS_OK != status) {
     if (info) {
@@ -491,14 +492,14 @@ int ArgusCamera::setAeRegions(std::vector<std::vector<float>> AeRegions)
 {
   Argus::Status status;
 
-  auto iRequest = interface_cast<IRequest>(mRequest);
-  if (!iRequest) {
-    return 1; // failed to create request interface
-  }
-  auto iAutoControlSettings = interface_cast<IAutoControlSettings>(iRequest->getAutoControlSettings());
-  if (!iAutoControlSettings) {
-    return 2; // failed to create AutoControlSettings interface
-  }
+  // auto iRequest = interface_cast<IRequest>(mRequest);
+  // if (!iRequest) {
+  //   return 1; // failed to create request interface
+  // }
+  // auto iAutoControlSettings = interface_cast<IAutoControlSettings>(iRequest->getAutoControlSettings());
+  // if (!iAutoControlSettings) {
+  //   return 2; // failed to create AutoControlSettings interface
+  // }
 
   // set autoexposure regions
   vector<Argus::AcRegion> cAeRegions;
