@@ -438,7 +438,7 @@ int ArgusCamera::read(uint8_t *data)
   return 0;
 }
 
-int vector<std::vector<float>> ArgusCamera::getAeRegions(int *info=nullptr)
+vector<std::vector<float>> ArgusCamera::getAeRegions(int *info=nullptr)
 {
   Argus::Status status;
 
