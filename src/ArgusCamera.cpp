@@ -501,20 +501,18 @@ int ArgusCamera::setAeRegions(std::vector<std::vector<float>> AeRegions)
   }
 
   // set autoexposure regions
-  if (!AeRegions.empty()) {
-    vector<Argus::AcRegion> cAeRegions;
-    for (vector<float>& AeRegion : AeRegions)
-      cAeRegions.push_back(Argus::AcRegion(
-        static_cast<int>(AeRegion[0]),
-        static_cast<int>(AeRegion[1]),
-        static_cast<int>(AeRegion[2]),
-        static_cast<int>(AeRegion[3]),
-        AeRegion[4]
-      ));
-    status = iAutoControlSettings->setAeRegions(cAeRegions);
-    if (Argus::STATUS_OK != status) {
-      return 3; // failed to set ae region
-    }
+  vector<Argus::AcRegion> cAeRegions;
+  for (vector<float>& AeRegion : AeRegions)
+    cAeRegions.push_back(Argus::AcRegion(
+      static_cast<int>(AeRegion[0]),
+      static_cast<int>(AeRegion[1]),
+      static_cast<int>(AeRegion[2]),
+      static_cast<int>(AeRegion[3]),
+      AeRegion[4]
+    ));
+  status = iAutoControlSettings->setAeRegions(cAeRegions);
+  if (Argus::STATUS_OK != status) {
+    return 3; // failed to set ae region
   }
 
   return 0;
