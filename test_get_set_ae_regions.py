@@ -33,19 +33,20 @@ def main():
     # IMX-219 native resolution (mode = 0): 3280x2464
     while True:
         r = camera.setAeRegions([ae_region.tolist()])
-        print(r)
+        # print(r)
         # print(camera.getAeRegions())
         image = camera.read()
 
         bgr = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
-        b = ae_region[:4].astype(np.int32)
+        b = (ae_region[:4]/4).astype(np.int32)
         cv2.rectangle(bgr, (b[0], b[1]), (b[2], b[3]), (255, 0, 255), 3)
         cv2.imshow("Argus Camera", bgr)
         k = cv2.waitKey(1)
-        if k & 0xFF == 27:
+        if k & 0xFF == ord("q"):
             cv2.destroyAllWindows()
             print("Exiting...")
             break
+        shift_ae_region(ae_region)
 
 
 if __name__ == "__main__":
