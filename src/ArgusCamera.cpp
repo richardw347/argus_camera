@@ -19,6 +19,8 @@ public:
   static ArgusCamera *createArgusCamera(const ArgusCameraConfig &config, int *info=nullptr);
   ~ArgusCamera();
   int read(uint8_t *data) override;
+  std::vector<std::vector<float>> getAeRegions(int *info=nullptr) override;
+  // void setAeRegions(std::vector<std::vector<float>> AeRegions) override;
 
 private:
   ArgusCameraConfig mConfig;
@@ -26,6 +28,7 @@ private:
   Argus::UniqueObj<Argus::CaptureSession> mCaptureSession;
   Argus::UniqueObj<Argus::OutputStream> mStream;
   Argus::UniqueObj<EGLStream::FrameConsumer> mFrameConsumer;
+  Argus::UniqueObj<Argus::Request> mRequest;
   NvVideoConverter *mVideoConverter;
 };
 
@@ -134,8 +137,8 @@ ArgusCamera *ArgusCamera::createArgusCamera(const ArgusCameraConfig &config, int
   }
 
   // start repeating capture request
-  auto request = UniqueObj<Request>(iCaptureSession->createRequest());
-  auto iRequest = interface_cast<IRequest>(request);
+  camera->mRequest = UniqueObj<Request>(iCaptureSession->createRequest());
+  auto iRequest = interface_cast<IRequest>(camera->mRequest);
   if (!iRequest) {
     if (info) {
       *info = 9; // failed to create request
@@ -272,7 +275,7 @@ ArgusCamera *ArgusCamera::createArgusCamera(const ArgusCameraConfig &config, int
   }
 
   // start repeating capture request
-  status = iCaptureSession->repeat(request.get());
+  status = iCaptureSession->repeat(camera->mRequest.get());
   if (Argus::STATUS_OK != status) {
     if (info) {
       *info = 10; // failed to start repeating capture request
@@ -433,6 +436,47 @@ int ArgusCamera::read(uint8_t *data)
   NvBufferDestroy(fd);
 
   return 0;
+}
+
+int vector<std::vector<float>> ArgusCamera::std::getAeRegions(int *info=nullptr)
+{
+  Argus::Status status;
+
+  auto iRequest = interface_cast<IRequest>(mRequest);
+  if (!iRequest) {
+    if (info) {
+      return 1; // failed to create request interface
+    }
+    return nullptr;
+  }
+  auto iAutoControlSettings = interface_cast<IAutoControlSettings>(iRequest->getAutoControlSettings());
+  if (!iAutoControlSettings) {
+    if (info) {
+      return 2; // failed to create AutoControlSettings interface
+    }
+    return nullptr;
+  }
+
+  // get autoexposure regions
+  vector<Argus::AcRegion> rAeRegions;
+  status = iAutoControlSettings->getAeRegions(rAeRegions);
+  if (Argus::STATUS_OK != status) {
+    if (info) {
+      *info = 3; // failed to get AeRegions
+    }
+    return nullptr;
+  }
+
+  vector<std::vector<float>> AeRegions;
+  for (Argus::AcRegion& rAeRegion : rAeRegions)
+    AeRegions.push_back(vector<float>(
+      static_cast<float>(AeRegion[0]),
+      static_cast<float>(AeRegion[1]),
+      static_cast<float>(AeRegion[2]),
+      static_cast<float>(AeRegion[3]),
+      AeRegion[4]
+    ));
+  return AeRegions;
 }
 
 IArgusCamera * IArgusCamera::createArgusCamera(const ArgusCameraConfig &config, int *info)

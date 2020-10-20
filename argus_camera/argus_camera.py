@@ -76,3 +76,11 @@ class ArgusCamera:
         image = np.empty(list(self.video_converter_resolution)[::-1] + [self.channels], np.uint8)
         self.camera.read(image.ctypes.data)
         return image
+
+    def getAeRegions(self) -> list:
+        _ret = self.camera.getAeRegions()
+        print(type(_ret)) # DEBUG
+        ae_regions = [
+            [*tuple(map(int, _r[:4])), _r[4]]
+            for _r in _ret]
+        return ae_regions
