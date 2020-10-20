@@ -90,6 +90,6 @@ public:
   virtual ~IArgusCamera() {};
   virtual int read(uint8_t *data) = 0;
   virtual std::vector<std::vector<float>> getAeRegions(int *info=nullptr) = 0;
-  virtual int setAeRegions(std::vector<std::vector<float>> &AeRegions) = 0;
+  virtual int setAeRegions() = 0;
 };
 

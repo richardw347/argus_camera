@@ -20,7 +20,7 @@ public:
   ~ArgusCamera();
   int read(uint8_t *data) override;
   std::vector<std::vector<float>> getAeRegions(int *info=nullptr) override;
-  int setAeRegions(std::vector<std::vector<float>> &AeRegions) override;
+  int setAeRegions() override;
 
 private:
   ArgusCameraConfig mConfig;
@@ -488,7 +488,7 @@ vector<std::vector<float>> ArgusCamera::getAeRegions(int *info)
   return AeRegions;
 }
 
-int ArgusCamera::setAeRegions(std::vector<std::vector<float>> &AeRegions)
+int ArgusCamera::setAeRegions()
 {
   Argus::Status status;
 
@@ -502,18 +502,20 @@ int ArgusCamera::setAeRegions(std::vector<std::vector<float>> &AeRegions)
   // }
 
   // set autoexposure regions
-  vector<Argus::AcRegion> cAeRegions;
-  for (vector<float>& AeRegion : AeRegions)
-    cAeRegions.push_back(Argus::AcRegion(
-      static_cast<int>(AeRegion[0]),
-      static_cast<int>(AeRegion[1]),
-      static_cast<int>(AeRegion[2]),
-      static_cast<int>(AeRegion[3]),
-      AeRegion[4]
-    ));
-  status = iAutoControlSettings->setAeRegions(cAeRegions);
-  if (Argus::STATUS_OK != status) {
-    return 3; // failed to set ae region
+  if (!(camera->mConfig.getAeRegions()).empty()) {
+    vector<Argus::AcRegion> AeRegions;
+    for (vector<float>& AeRegion : camera->mConfig.getAeRegions())
+      AeRegions.push_back(Argus::AcRegion(
+        static_cast<int>(AeRegion[0]),
+        static_cast<int>(AeRegion[1]),
+        static_cast<int>(AeRegion[2]),
+        static_cast<int>(AeRegion[3]),
+        AeRegion[4]
+      ));
+    status = camera->iAutoControlSettings->setAeRegions(AeRegions);
+    if (Argus::STATUS_OK != status) {
+      return 22;
+    }
   }
 
   return 0;
