@@ -477,6 +477,13 @@ int ArgusCamera::setAeRegions()
 {
   Argus::Status status;
 
+  auto iCaptureSession = interface_cast<ICaptureSession>(mCaptureSession);
+  if (iCaptureSession) {
+    iCaptureSession->stopRepeat();
+    iCaptureSession->waitForIdle();
+  }
+
+
   // set autoexposure regions
   if (!(mConfig.getAeRegions()).empty()) {
     vector<Argus::AcRegion> AeRegions;
@@ -492,6 +499,15 @@ int ArgusCamera::setAeRegions()
     if (Argus::STATUS_OK != status) {
       return 22;
     }
+  }
+
+  // start repeating capture request
+  status = iCaptureSession->repeat(mRequest.get());
+  if (Argus::STATUS_OK != status) {
+    if (info) {
+      *info = 10; // failed to start repeating capture request
+    }
+    return nullptr;
   }
 
   return 0;
