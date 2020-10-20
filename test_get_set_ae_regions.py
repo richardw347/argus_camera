@@ -35,8 +35,7 @@ def main():
     # IMX-219 native resolution (mode = 0): 3280x2464
     while True:
         r = camera.setAeRegions([ae_region.tolist()])
-        # print(r)
-        # print(camera.getAeRegions())
+        assert not r
         image = camera.read()
 
         bgr = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)

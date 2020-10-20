@@ -78,6 +78,7 @@ class ArgusCamera:
         return image
 
     def getAeRegions(self) -> list:
+        raise NotImplementedError("bug from argus itself")
         _ret = self.camera.getAeRegions()
         print(type(_ret)) # DEBUG
         ae_regions = [
