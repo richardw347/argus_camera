@@ -438,7 +438,7 @@ int ArgusCamera::read(uint8_t *data)
   return 0;
 }
 
-vector<std::vector<float>> ArgusCamera::getAeRegions(int *info=nullptr)
+vector<std::vector<float>> ArgusCamera::getAeRegions(int *info)
 {
   Argus::Status status;
 
@@ -469,7 +469,7 @@ vector<std::vector<float>> ArgusCamera::getAeRegions(int *info=nullptr)
     return AeRegions;
   }
 
-  for (Argus::AcRegion& rAeRegion : rAeRegions)
+  for (Argus::AcRegion rAeRegion : rAeRegions)
     AeRegions.push_back(vector<float>(
       static_cast<float>(rAeRegion[0]),
       static_cast<float>(rAeRegion[1]),
