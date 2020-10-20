@@ -460,7 +460,7 @@ vector<std::vector<float>> ArgusCamera::getAeRegions(int *info=nullptr)
   }
 
   // get autoexposure regions
-  vector<Argus::AcRegion> rAeRegions;
+  vector<Argus::AcRegion> *rAeRegions;
   status = iAutoControlSettings->getAeRegions(rAeRegions);
   if (Argus::STATUS_OK != status) {
     if (info) {
@@ -471,11 +471,11 @@ vector<std::vector<float>> ArgusCamera::getAeRegions(int *info=nullptr)
 
   for (Argus::AcRegion& rAeRegion : rAeRegions)
     AeRegions.push_back(vector<float>(
-      static_cast<float>(AeRegion[0]),
-      static_cast<float>(AeRegion[1]),
-      static_cast<float>(AeRegion[2]),
-      static_cast<float>(AeRegion[3]),
-      AeRegion[4]
+      static_cast<float>(rAeRegion[0]),
+      static_cast<float>(rAeRegion[1]),
+      static_cast<float>(rAeRegion[2]),
+      static_cast<float>(rAeRegion[3]),
+      rAeRegion[4]
     ));
   return AeRegions;
 }
