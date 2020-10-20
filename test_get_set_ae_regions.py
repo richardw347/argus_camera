@@ -11,7 +11,7 @@ def main():
     camera = ArgusCamera(
         stream_resolution=(1640, 1232),
         video_converter_resolution=(820, 616),
-        ae_regions=[[top, left, bottom, right, 1.0]])
+        ae_regions=[[left, top, right, bottom, 1.0]])
     cv2.namedWindow("Argus Camera", cv2.WINDOW_AUTOSIZE)
     cv2.moveWindow("Argus Camera", 10, 10)
     # IMX-219 native resolution (mode = 0): 3280x2464
