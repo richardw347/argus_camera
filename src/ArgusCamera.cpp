@@ -479,6 +479,11 @@ vector<std::vector<float>> ArgusCamera::getAeRegions(int *info)
     AeRegion.push_back(rAeRegion.weight());
     AeRegions.push_back(AeRegion);
   }
+
+  if (info) {
+    *info = 0;
+  }
+
   return AeRegions;
 }
 
