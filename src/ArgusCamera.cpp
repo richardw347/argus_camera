@@ -20,7 +20,7 @@ public:
   ~ArgusCamera();
   int read(uint8_t *data) override;
   std::vector<std::vector<float>> getAeRegions(int *info=nullptr) override;
-  int setAeRegions(std::vector<std::vector<float>> AeRegions) override;
+  int setAeRegions(std::vector<std::vector<float>> &AeRegions) override;
 
 private:
   ArgusCameraConfig mConfig;
@@ -488,7 +488,7 @@ vector<std::vector<float>> ArgusCamera::getAeRegions(int *info)
   return AeRegions;
 }
 
-int ArgusCamera::setAeRegions(std::vector<std::vector<float>> AeRegions)
+int ArgusCamera::setAeRegions(std::vector<std::vector<float>> &AeRegions)
 {
   Argus::Status status;
 
