@@ -78,9 +78,17 @@ class ArgusCamera:
         return image
 
     def getAeRegions(self) -> list:
+        raise NotImplementedError("method still buggy")
         _ret = self.camera.getAeRegions()
         print(type(_ret)) # DEBUG
         ae_regions = [
             [*tuple(map(int, _r[:4])), _r[4]]
             for _r in _ret]
         return ae_regions
+
+    def setAeRegions(self, ae_regions: list) -> int:
+        aeRegion_arr = np.asarray(ae_regions, dtype=np.float32)
+        aer_shape = aeRegion_arr.shape
+        if not (len(aer_shape) == 2 and aer_shape[0] and aer_shape[1] == 5):
+            raise ValueError("ae_regions value error")
+        return self.camera.setAeRegions(aeRegion_arr.tolist())
