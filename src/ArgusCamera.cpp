@@ -29,7 +29,7 @@ private:
   Argus::UniqueObj<Argus::OutputStream> mStream;
   Argus::UniqueObj<EGLStream::FrameConsumer> mFrameConsumer;
   Argus::UniqueObj<Argus::Request> mRequest;
-  Argus::IAutoControlSettings iAutoControlSettings;
+  Argus::IAutoControlSettings *iAutoControlSettings;
   NvVideoConverter *mVideoConverter;
 };
 
