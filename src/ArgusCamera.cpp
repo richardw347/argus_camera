@@ -442,19 +442,21 @@ vector<std::vector<float>> ArgusCamera::getAeRegions(int *info=nullptr)
 {
   Argus::Status status;
 
+  vector<std::vector<float>> AeRegions;
+
   auto iRequest = interface_cast<IRequest>(mRequest);
   if (!iRequest) {
     if (info) {
-      return 1; // failed to create request interface
+      *info = 1; // failed to create request interface
     }
-    return nullptr;
+    return AeRegions;
   }
   auto iAutoControlSettings = interface_cast<IAutoControlSettings>(iRequest->getAutoControlSettings());
   if (!iAutoControlSettings) {
     if (info) {
-      return 2; // failed to create AutoControlSettings interface
+      *info = 2; // failed to create AutoControlSettings interface
     }
-    return nullptr;
+    return AeRegions;
   }
 
   // get autoexposure regions
@@ -464,10 +466,9 @@ vector<std::vector<float>> ArgusCamera::getAeRegions(int *info=nullptr)
     if (info) {
       *info = 3; // failed to get AeRegions
     }
-    return nullptr;
+    return AeRegions;
   }
 
-  vector<std::vector<float>> AeRegions;
   for (Argus::AcRegion& rAeRegion : rAeRegions)
     AeRegions.push_back(vector<float>(
       static_cast<float>(AeRegion[0]),
