@@ -21,7 +21,7 @@ def main():
     bottom = int(bottom/4)
     while True:
         image = camera.read()
-        print(camera.getAeRegions())
+        # print(camera.getAeRegions())
         bgr = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
         cv2.rectangle(bgr, (left, top), (right, bottom), (255, 0, 255), 3)
         cv2.imshow("Argus Camera", bgr)
