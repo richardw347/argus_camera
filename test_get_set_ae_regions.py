@@ -8,17 +8,19 @@ def shift_ae_region(ae_region: np.ndarray, mode_resolution: tuple = (3280, 2464)
     """
     In-place
     """
-    ae_region[0] += 10
-    ae_region[2] += 10
+    offset = 10
+    w = ae_region[2] - ae_region[0]
+    h = ae_region[3] - ae_region[1]
+    ae_region[0] += offset
+    ae_region[2] += offset
     if ae_region[2] >= mode_resolution[0]:
-        ae_region[0] -= mode_resolution[0]
-        ae_region[2] -= mode_resolution[0]
-        h = ae_region[3] - ae_region[1]
+        ae_region[0] -= mode_resolution[0] - w
+        ae_region[2] -= mode_resolution[0] - w
         ae_region[1] += h
         ae_region[3] += h
     if ae_region[3] >= mode_resolution[1]:
-        ae_region[1] -= mode_resolution[1]
-        ae_region[3] -= mode_resolution[1]
+        ae_region[1] -= mode_resolution[1] - h
+        ae_region[3] -= mode_resolution[1] - h
 
 
 def main():
