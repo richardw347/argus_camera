@@ -470,6 +470,7 @@ vector<std::vector<float>> ArgusCamera::getAeRegions(int *info)
   }
 
   for (Argus::AcRegion rAeRegion : *rAeRegions)
+  {
     vector<float> AeRegion{
       static_cast<float>(rAeRegion[0]),
       static_cast<float>(rAeRegion[1]),
@@ -478,6 +479,7 @@ vector<std::vector<float>> ArgusCamera::getAeRegions(int *info)
       rAeRegion[4]
     };
     AeRegions.push_back(AeRegion);
+  }
   return AeRegions;
 }
 
