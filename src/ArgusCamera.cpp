@@ -502,9 +502,9 @@ int ArgusCamera::setAeRegions()
   // }
 
   // set autoexposure regions
-  if (!(camera->mConfig.getAeRegions()).empty()) {
+  if (!(mConfig.getAeRegions()).empty()) {
     vector<Argus::AcRegion> AeRegions;
-    for (vector<float>& AeRegion : camera->mConfig.getAeRegions())
+    for (vector<float>& AeRegion : mConfig.getAeRegions())
       AeRegions.push_back(Argus::AcRegion(
         static_cast<int>(AeRegion[0]),
         static_cast<int>(AeRegion[1]),
@@ -512,7 +512,7 @@ int ArgusCamera::setAeRegions()
         static_cast<int>(AeRegion[3]),
         AeRegion[4]
       ));
-    status = camera->iAutoControlSettings->setAeRegions(AeRegions);
+    status = iAutoControlSettings->setAeRegions(AeRegions);
     if (Argus::STATUS_OK != status) {
       return 22;
     }
