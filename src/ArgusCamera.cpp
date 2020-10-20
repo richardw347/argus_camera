@@ -445,20 +445,20 @@ vector<std::vector<float>> ArgusCamera::getAeRegions(int *info)
 
   vector<std::vector<float>> AeRegions;
 
-  auto iRequest = interface_cast<IRequest>(mRequest);
-  if (!iRequest) {
-    if (info) {
-      *info = 1; // failed to create request interface
-    }
-    return AeRegions;
-  }
-  auto iAutoControlSettings = interface_cast<IAutoControlSettings>(iRequest->getAutoControlSettings());
-  if (!iAutoControlSettings) {
-    if (info) {
-      *info = 2; // failed to create AutoControlSettings interface
-    }
-    return AeRegions;
-  }
+  // auto iRequest = interface_cast<IRequest>(mRequest);
+  // if (!iRequest) {
+  //   if (info) {
+  //     *info = 1; // failed to create request interface
+  //   }
+  //   return AeRegions;
+  // }
+  // auto iAutoControlSettings = interface_cast<IAutoControlSettings>(iRequest->getAutoControlSettings());
+  // if (!iAutoControlSettings) {
+  //   if (info) {
+  //     *info = 2; // failed to create AutoControlSettings interface
+  //   }
+  //   return AeRegions;
+  // }
 
   // get autoexposure regions
   vector<Argus::AcRegion> *rAeRegions;
