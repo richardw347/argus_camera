@@ -504,10 +504,7 @@ int ArgusCamera::setAeRegions()
   // start repeating capture request
   status = iCaptureSession->repeat(mRequest.get());
   if (Argus::STATUS_OK != status) {
-    if (info) {
-      *info = 10; // failed to start repeating capture request
-    }
-    return nullptr;
+    return 10; // failed to start repeating capture request
   }
 
   return 0;
