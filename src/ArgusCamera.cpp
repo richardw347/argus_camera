@@ -311,6 +311,34 @@ ArgusCamera *ArgusCamera::createArgusCamera(const ArgusCameraConfig &config, int
     return nullptr;
   }
 
+  // set isp digital gain range
+  status = iAutoControlSettings->setIspDigitalGainRange(Argus::Range<float>(
+    camera->mConfig.getIspDigitalGainRange()[0],
+    camera->mConfig.getIspDigitalGainRange()[1]
+  ));
+  if (Argus::STATUS_OK != status) {
+    if (info) {
+      *info = 34;
+    }
+    return nullptr;
+  }
+
+  // set ae anti banding mode
+  const AeAntibandingMode *aeAntibandingMode;
+  switch (camera->mConfig.getAeAntibandingMode()) {
+    case 0: aeAntibandingMode = &AE_ANTIBANDING_MODE_OFF; break;
+    case 1: aeAntibandingMode = &AE_ANTIBANDING_MODE_AUTO; break;
+    case 2: aeAntibandingMode = &AE_ANTIBANDING_MODE_50HZ; break;
+    case 3: aeAntibandingMode = &AE_ANTIBANDING_MODE_60HZ; break;
+  }
+  status = iAutoControlSettings->setAeAntibandingMode(*aeAntibandingMode);
+  if (Argus::STATUS_OK != status) {
+    if (info) {
+      *info = 35;
+    }
+    return nullptr;
+  }
+
   /********************************************************************/
 
 
