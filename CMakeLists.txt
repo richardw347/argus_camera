@@ -16,7 +16,12 @@ add_library(argus_camera SHARED
   ${TegraMM_COMMON_SOURCES}
 )
 
+message("TegraMM_INCLUDE_DIRS")
+message("${TegraMM_INCLUDE_DIRS}")
+include_directories(${TegraMM_INCLUDE_DIRS})
+
 target_link_libraries(argus_camera ${TegraMM_LIBRARIES})
+
 set_target_properties(argus_camera PROPERTIES PUBLIC_HEADER 
   "src/ArgusCamera.hpp"
 )
@@ -27,12 +32,3 @@ install(TARGETS argus_camera
   ARCHIVE DESTINATION lib/static
   PUBLIC_HEADER DESTINATION include/argus_camera)
 
-
-# TESTS
-
-if (BUILD_TESTS)
-  find_package(GTest REQUIRED)
-
-  add_executable(TestArgusCamera test/TestArgusCamera.cpp)
-  target_link_libraries(TestArgusCamera gtest argus_camera)
-endif()
