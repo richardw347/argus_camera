@@ -47,6 +47,12 @@ public:
   void setGainRange(std::vector<float> gainRange) { mGainRange = gainRange; };
   std::vector<float> getGainRange() { return mGainRange; };
 
+  void setDenoiseMode(uint32_t denoiseMode) { mDenoiseMode = denoiseMode; };
+  uint32_t getDenoiseMode() { return mDenoiseMode; };
+
+  void setDenoiseStrength(float denoiseStrength) { mDenoiseStrength = denoiseStrength; };
+  float getDenoiseStrength() { return mDenoiseStrength; };
+
   bool mAeLock;
   uint32_t mDeviceId;
   uint32_t mSensorMode;
@@ -58,6 +64,8 @@ public:
   std::vector<float> mGainRange;
   std::vector<float> mSourceClipRect;
   std::vector<std::vector<float>> mAeRegions;
+  uint32_t mDenoiseMode;
+  float mDenoiseStrength;
 
   std::vector<uint32_t> getOutputShape() {
     return { mVideoConverterResolution[HEIGHT_IDX], mVideoConverterResolution[WIDTH_IDX], getNumChannels() };
@@ -80,6 +88,8 @@ ArgusCameraConfig DEFAULT_DEVKIT_CONFIG()
     c.mVideoConverterResolution = { 640, 480 };
     c.mFrameDurationRange = { ONE_SECOND_NANOS / 30, ONE_SECOND_NANOS / 30 }; // 30fps
     c.mExposureTimeRange = { EXPOSURE_DEFAULT_LOW,EXPOSURE_DEFAULT_HIGH };
+    c.mDenoiseMode = 0;
+    c.mDenoiseStrength = 0.0;
     return c;
 }
 

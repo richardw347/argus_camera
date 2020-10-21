@@ -17,7 +17,9 @@ class ArgusCamera:
             source_clip_rect = (0.0, 0.0, 1.0, 1.0),
             gain_range = (0., 300.),
             ae_regions = None,
-            sensor_mode=0):
+            sensor_mode=0,
+            denoise_mode=0,
+            denoise_strength=0.0):
 
         self.device_id = device_id
 
@@ -37,6 +39,10 @@ class ArgusCamera:
         self.config.setExposureCompensation(0)
         self.config.setGainRange(gain_range)
         self.config.setAeLock(False)
+
+        # Set denoise and edge enhancement
+        self.config.setDenoiseMode(denoise_mode)
+        self.config.setDenoiseStrength(denoise_strength)
 
         if ae_regions is not None:
             aeRegion_arr = np.asarray(ae_regions, dtype=np.float32)

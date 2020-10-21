@@ -2,9 +2,11 @@ import os
 from setuptools import find_packages, setup, Extension
 import subprocess
 
+from versioning_git_to_pep440 import versioning_git_to_pep440
+
 this_dir = os.path.dirname(os.path.realpath(__file__))
 swig_file = os.path.join(this_dir, 'argus_camera/cpp.i')
-argus_include_dir = os.path.join(os.environ['HOME'], 'tegra_multimedia_api/include')
+argus_include_dir = '/usr/src/jetson_multimedia_api/include'
 
 subprocess.call(['swig', '-DSWIGWORDSIZE64', '-c++', '-python', '-interface', '_argus_camera_cpp', swig_file])
 
@@ -17,9 +19,15 @@ argus_camera_cpp = Extension('_argus_camera_cpp',
         extra_compile_args=['-std=c++11'],
 )
 
+version = versioning_git_to_pep440(
+        subprocess.run(
+                ['git', 'describe', '--tag'],
+                stdout=subprocess.PIPE
+        ).stdout.decode("utf-8").splitlines()[0])
+
 setup(
         name='argus_camera',
-        version='0.0',
+        version=version,
         description='Camera interface for NVIDIA Jetson',
         author='',
         author_email='',
