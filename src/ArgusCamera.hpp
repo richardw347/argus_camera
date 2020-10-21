@@ -60,7 +60,7 @@ public:
   float getEdgeEnhanceStrength() { return mEdgeEnhanceStrength; };
 
   void setIspDigitalGainRange(std::vector<float> ispDigitalGainRange) { mIspDigitalGainRange = ispDigitalGainRange; };
-  std::vector<float> getGainRange() { return mIspDigitalGainRange; };
+  std::vector<float> getIspDigitalGainRange() { return mIspDigitalGainRange; };
 
   void setAeAntibandingMode(uint32_t aeAntibandingMode) { mAeAntibandingMode = aeAntibandingMode; };
   uint32_t getAeAntibandingMode() { return mAeAntibandingMode; };
