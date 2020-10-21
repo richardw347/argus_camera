@@ -6,9 +6,10 @@ def main():
     camera = ArgusCamera(
         stream_resolution=(1640, 1232),
         video_converter_resolution=(820, 616),
-        denoise_mode=3,
+        denoise_mode=2,
         denoise_strength=1.0)
     cv2.namedWindow("Argus Camera", cv2.WINDOW_AUTOSIZE)
+    cv2.moveWindow("Argus Camera", 10, 10)
     while True:
         image = camera.read()
         image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
