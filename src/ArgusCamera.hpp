@@ -7,6 +7,8 @@
 #define WIDTH_IDX 0
 #define HEIGHT_IDX 1
 #define ONE_SECOND_NANOS 1000000000
+#define EXPOSURE_DEFAULT_LOW 0 
+#define EXPOSURE_DEFAULT_HIGH 9999999999999
 
 class ArgusCameraConfig
 {
@@ -30,12 +32,32 @@ public:
   void setSensorMode(uint32_t sensorMode) { mSensorMode = sensorMode; };
   uint32_t getSensorMode() { return mSensorMode; };
 
+  void setExposureTimeRange(std::vector<uint64_t> exposureTimeRange) { mExposureTimeRange = exposureTimeRange; };
+  std::vector<uint64_t> getExposureTimeRange() { return mExposureTimeRange; };
+
+  void setExposureCompensation(float ExposureCompensation) { mExposureCompensation = ExposureCompensation; };
+  float getExposureCompensation() { return mExposureCompensation; };
+
+  void setAeRegions(std::vector<std::vector<float> > AeRegions) { mAeRegions = AeRegions; };
+  std::vector<std::vector<float> > getAeRegions() { return mAeRegions; };
+  
+  void setAeLock(bool AeLock) { mAeLock = AeLock; };
+  bool getAeLock() { return mAeLock; };
+
+  void setGainRange(std::vector<float> gainRange) { mGainRange = gainRange; };
+  std::vector<float> getGainRange() { return mGainRange; };
+
+  bool mAeLock;
   uint32_t mDeviceId;
-  std::vector<float> mSourceClipRect;
+  uint32_t mSensorMode;
+  float mExposureCompensation;
   std::vector<uint32_t> mStreamResolution;
   std::vector<uint32_t> mVideoConverterResolution;
+  std::vector<uint64_t> mExposureTimeRange;
   std::vector<uint64_t> mFrameDurationRange;
-  uint32_t mSensorMode;
+  std::vector<float> mGainRange;
+  std::vector<float> mSourceClipRect;
+  std::vector<std::vector<float>> mAeRegions;
 
   std::vector<uint32_t> getOutputShape() {
     return { mVideoConverterResolution[HEIGHT_IDX], mVideoConverterResolution[WIDTH_IDX], getNumChannels() };
@@ -48,12 +70,16 @@ public:
 ArgusCameraConfig DEFAULT_DEVKIT_CONFIG()
 {
     ArgusCameraConfig c;
+    c.mAeLock = false;
     c.mDeviceId = 0;
+    c.mExposureCompensation = 0.;
+    c.mSensorMode = 0;
+    c.mGainRange = {0.0, 300.0};
     c.mSourceClipRect = { 0.0, 0.0, 1.0, 1.0 };
     c.mStreamResolution = { 640, 480 };
     c.mVideoConverterResolution = { 640, 480 };
     c.mFrameDurationRange = { ONE_SECOND_NANOS / 30, ONE_SECOND_NANOS / 30 }; // 30fps
-    c.mSensorMode = 0;
+    c.mExposureTimeRange = { EXPOSURE_DEFAULT_LOW,EXPOSURE_DEFAULT_HIGH };
     return c;
 }
 

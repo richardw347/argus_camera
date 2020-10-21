@@ -159,6 +159,7 @@ ArgusCamera *ArgusCamera::createArgusCamera(const ArgusCameraConfig &config, int
     return nullptr;
   }
   auto iSourceSettings = interface_cast<ISourceSettings>(iRequest->getSourceSettings());
+  auto iAutoControlSettings = interface_cast<IAutoControlSettings>(iRequest->getAutoControlSettings());
   status = iSourceSettings->setSensorMode(sensorModes[camera->mConfig.getSensorMode()]);
   if (Argus::STATUS_OK != status) {
     if (info) {
@@ -178,7 +179,76 @@ ArgusCamera *ArgusCamera::createArgusCamera(const ArgusCameraConfig &config, int
     }
     return nullptr;
   }
-  
+  /********************************************************************/
+  //  ADDITIONAL FUNCTION
+
+  // 3. set exposure time
+  status = iSourceSettings->setExposureTimeRange(Argus::Range<uint64_t>(
+    camera->mConfig.getExposureTimeRange()[0],
+    camera->mConfig.getExposureTimeRange()[1]
+  ));
+  if (Argus::STATUS_OK != status) {
+    if (info) {
+      *info = 20;
+    }
+    return nullptr;
+  }
+
+  // set exposure compensation
+  status = iAutoControlSettings->setExposureCompensation(float(
+    camera->mConfig.getExposureCompensation()));
+  if (Argus::STATUS_OK != status) {
+    if (info) {
+      *info = 21;
+    }
+    return nullptr;
+  }
+
+  // set autoexposure regions
+  if (!(camera->mConfig.getAeRegions()).empty()) {
+    vector<Argus::AcRegion> AeRegions;
+    for (vector<float>& AeRegion : camera->mConfig.getAeRegions())
+      AeRegions.push_back(Argus::AcRegion(
+        static_cast<int>(AeRegion[0]),
+        static_cast<int>(AeRegion[1]),
+        static_cast<int>(AeRegion[2]),
+        static_cast<int>(AeRegion[3]),
+        AeRegion[4]
+      ));
+    status = iAutoControlSettings->setAeRegions(AeRegions);
+    if (Argus::STATUS_OK != status) {
+      if (info) {
+        *info = 22;
+      }
+      return nullptr;
+    }
+  }
+
+  // set ae lock
+  status = iAutoControlSettings->setAeLock(float(
+    camera->mConfig.getAeLock()));
+  if (Argus::STATUS_OK != status) {
+    if (info) {
+      *info = 24;
+    }
+    return nullptr;
+  }
+
+  // set gain range
+  status = iSourceSettings->setGainRange(Argus::Range<float>(
+    camera->mConfig.getGainRange()[0],
+    camera->mConfig.getGainRange()[1]
+  ));
+  if (Argus::STATUS_OK != status) {
+    if (info) {
+      *info = 30;
+    }
+    return nullptr;
+  }
+
+  /********************************************************************/
+
+
   // configure stream settings
   auto iStreamSettings = interface_cast<IStreamSettings>(iRequest->getStreamSettings(camera->mStream.get()));
   if (!iStreamSettings) {
