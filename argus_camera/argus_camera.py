@@ -21,7 +21,9 @@ class ArgusCamera:
             denoise_mode=0,
             denoise_strength=0.0,
             edge_enhance_mode=0,
-            edge_enhance_strength=0.0):
+            edge_enhance_strength=0.0,
+            isp_digital_gain_range = (0., 300.),
+            ae_antibanding_mode=0):
 
         self.device_id = device_id
 
@@ -41,6 +43,8 @@ class ArgusCamera:
         self.config.setExposureCompensation(0)
         self.config.setGainRange(gain_range)
         self.config.setAeLock(False)
+        self.config.setIspDigitalGainRange(isp_digital_gain_range)
+        self.config.setAeAntibandingMode(ae_antibanding_mode)
 
         # Set denoise and edge enhancement
         self.config.setDenoiseMode(denoise_mode)

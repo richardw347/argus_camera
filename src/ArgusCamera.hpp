@@ -59,6 +59,12 @@ public:
   void setEdgeEnhanceStrength(float edgeEnhanceStrength) { mEdgeEnhanceStrength = edgeEnhanceStrength; };
   float getEdgeEnhanceStrength() { return mEdgeEnhanceStrength; };
 
+  void setIspDigitalGainRange(std::vector<float> ispDigitalGainRange) { mIspDigitalGainRange = ispDigitalGainRange; };
+  std::vector<float> getGainRange() { return mIspDigitalGainRange; };
+
+  void setAeAntibandingMode(uint32_t aeAntibandingMode) { mAeAntibandingMode = aeAntibandingMode; };
+  uint32_t getAeAntibandingMode() { return mAeAntibandingMode; };
+
   bool mAeLock;
   uint32_t mDeviceId;
   uint32_t mSensorMode;
@@ -74,6 +80,8 @@ public:
   float mDenoiseStrength;
   uint32_t mEdgeEnhanceMode;
   float mEdgeEnhanceStrength;
+  std::vector<float> mIspDigitalGainRange;
+  uint32_t mAeAntibandingMode;
 
   std::vector<uint32_t> getOutputShape() {
     return { mVideoConverterResolution[HEIGHT_IDX], mVideoConverterResolution[WIDTH_IDX], getNumChannels() };
@@ -100,6 +108,8 @@ ArgusCameraConfig DEFAULT_DEVKIT_CONFIG()
     c.mDenoiseStrength = 0.0;
     c.mEdgeEnhanceMode = 0;
     c.mEdgeEnhanceStrength = 0.0;
+    c.mIspDigitalGainRange = {0.0, 300.0};
+    c.mAeAntibandingMode = 0;
     return c;
 }
 
