@@ -148,10 +148,11 @@ ArgusCamera *ArgusCamera::createArgusCamera(const ArgusCameraConfig &config, int
 
   /********************************************************************/
   // NOISE REDUCTION AND EDGE ENHANCEMENT
+  // denoise settings interface
   auto iDenoiseSettings = interface_cast<IDenoiseSettings>(request);
   if (!iDenoiseSettings) {
     if (info) {
-      *info = 25; // failed to create request
+      *info = 25; // failed to create denoise settings
     }
     return nullptr;
   }
@@ -176,6 +177,38 @@ ArgusCamera *ArgusCamera::createArgusCamera(const ArgusCameraConfig &config, int
     }
     return nullptr;
   }
+
+  // edge enhance settings
+  auto iEdgeEnhanceSettings = interface_cast<IEdgeEnhanceSettings>(request);
+  if (!iEdgeEnhanceSettings) {
+    if (info) {
+      *info = 28; // failed to create edge enhance settings
+    }
+    return nullptr;
+  }
+  // set edge enhance
+  const EdgeEnhanceMode *edgeEnhanceMode;
+  switch (camera->mConfig.getEdgeEnhanceMode()) {
+    case 0: edgeEnhanceMode = &EDGE_ENHANCE_MODE_OFF; break;
+    case 1: edgeEnhanceMode = &EDGE_ENHANCE_MODE_FAST; break;
+    case 2: edgeEnhanceMode = &EDGE_ENHANCE_MODE_HIGH_QUALITY; break;
+  }
+  status = iEdgeEnhanceSettings->setEdgeEnhanceMode(*edgeEnhanceMode);
+  if (Argus::STATUS_OK != status) {
+    if (info) {
+      *info = 29;
+    }
+    return nullptr;
+  }
+  status = iEdgeEnhanceSettings->setEdgeEnhanceStrength(camera->mConfig.getEdgeEnhanceStrength());
+  if (Argus::STATUS_OK != status) {
+    if (info) {
+      *info = 31;
+    }
+    return nullptr;
+  }
+
+
 
   /********************************************************************/
   // configure source settings in request
