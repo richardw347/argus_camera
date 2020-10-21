@@ -146,6 +146,71 @@ ArgusCamera *ArgusCamera::createArgusCamera(const ArgusCameraConfig &config, int
   // enable output stream
   iRequest->enableOutputStream(camera->mStream.get());
 
+  /********************************************************************/
+  // NOISE REDUCTION AND EDGE ENHANCEMENT
+  // denoise settings interface
+  auto iDenoiseSettings = interface_cast<IDenoiseSettings>(request);
+  if (!iDenoiseSettings) {
+    if (info) {
+      *info = 25; // failed to create denoise settings
+    }
+    return nullptr;
+  }
+  // set denoise
+  const DenoiseMode *denoiseMode;
+  switch (camera->mConfig.getDenoiseMode()) {
+    case 0: denoiseMode = &DENOISE_MODE_OFF; break;
+    case 1: denoiseMode = &DENOISE_MODE_FAST; break;
+    case 2: denoiseMode = &DENOISE_MODE_HIGH_QUALITY; break;
+  }
+  status = iDenoiseSettings->setDenoiseMode(*denoiseMode);
+  if (Argus::STATUS_OK != status) {
+    if (info) {
+      *info = 26;
+    }
+    return nullptr;
+  }
+  status = iDenoiseSettings->setDenoiseStrength(camera->mConfig.getDenoiseStrength());
+  if (Argus::STATUS_OK != status) {
+    if (info) {
+      *info = 27;
+    }
+    return nullptr;
+  }
+
+  // edge enhance settings
+  auto iEdgeEnhanceSettings = interface_cast<IEdgeEnhanceSettings>(request);
+  if (!iEdgeEnhanceSettings) {
+    if (info) {
+      *info = 28; // failed to create edge enhance settings
+    }
+    return nullptr;
+  }
+  // set edge enhance
+  const EdgeEnhanceMode *edgeEnhanceMode;
+  switch (camera->mConfig.getEdgeEnhanceMode()) {
+    case 0: edgeEnhanceMode = &EDGE_ENHANCE_MODE_OFF; break;
+    case 1: edgeEnhanceMode = &EDGE_ENHANCE_MODE_FAST; break;
+    case 2: edgeEnhanceMode = &EDGE_ENHANCE_MODE_HIGH_QUALITY; break;
+  }
+  status = iEdgeEnhanceSettings->setEdgeEnhanceMode(*edgeEnhanceMode);
+  if (Argus::STATUS_OK != status) {
+    if (info) {
+      *info = 29;
+    }
+    return nullptr;
+  }
+  status = iEdgeEnhanceSettings->setEdgeEnhanceStrength(camera->mConfig.getEdgeEnhanceStrength());
+  if (Argus::STATUS_OK != status) {
+    if (info) {
+      *info = 31;
+    }
+    return nullptr;
+  }
+
+
+
+  /********************************************************************/
   // configure source settings in request
   // 1. set sensor mode
   auto iCameraProperties = interface_cast<ICameraProperties>(cameraDevice);
@@ -246,6 +311,34 @@ ArgusCamera *ArgusCamera::createArgusCamera(const ArgusCameraConfig &config, int
     return nullptr;
   }
 
+  // set isp digital gain range
+  status = iAutoControlSettings->setIspDigitalGainRange(Argus::Range<float>(
+    camera->mConfig.getIspDigitalGainRange()[0],
+    camera->mConfig.getIspDigitalGainRange()[1]
+  ));
+  if (Argus::STATUS_OK != status) {
+    if (info) {
+      *info = 34;
+    }
+    return nullptr;
+  }
+
+  // set ae anti banding mode
+  const AeAntibandingMode *aeAntibandingMode;
+  switch (camera->mConfig.getAeAntibandingMode()) {
+    case 0: aeAntibandingMode = &AE_ANTIBANDING_MODE_OFF; break;
+    case 1: aeAntibandingMode = &AE_ANTIBANDING_MODE_AUTO; break;
+    case 2: aeAntibandingMode = &AE_ANTIBANDING_MODE_50HZ; break;
+    case 3: aeAntibandingMode = &AE_ANTIBANDING_MODE_60HZ; break;
+  }
+  status = iAutoControlSettings->setAeAntibandingMode(*aeAntibandingMode);
+  if (Argus::STATUS_OK != status) {
+    if (info) {
+      *info = 35;
+    }
+    return nullptr;
+  }
+
   /********************************************************************/
 
 
@@ -270,6 +363,8 @@ ArgusCamera *ArgusCamera::createArgusCamera(const ArgusCameraConfig &config, int
     }
     return nullptr;
   }
+  // set stream post processing
+  iStreamSettings->setPostProcessingEnable(true);
 
   // start repeating capture request
   status = iCaptureSession->repeat(request.get());
