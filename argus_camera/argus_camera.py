@@ -19,7 +19,9 @@ class ArgusCamera:
             ae_regions = None,
             sensor_mode=0,
             denoise_mode=0,
-            denoise_strength=0.0):
+            denoise_strength=0.0,
+            edge_enhance_mode=0,
+            edge_enhance_strength=0.0):
 
         self.device_id = device_id
 
@@ -43,6 +45,8 @@ class ArgusCamera:
         # Set denoise and edge enhancement
         self.config.setDenoiseMode(denoise_mode)
         self.config.setDenoiseStrength(denoise_strength)
+        self.config.setEdgeEnhanceMode(edge_enhance_mode)
+        self.config.setEdgeEnhanceStrength(edge_enhance_strength)
 
         if ae_regions is not None:
             aeRegion_arr = np.asarray(ae_regions, dtype=np.float32)

@@ -53,6 +53,12 @@ public:
   void setDenoiseStrength(float denoiseStrength) { mDenoiseStrength = denoiseStrength; };
   float getDenoiseStrength() { return mDenoiseStrength; };
 
+  void setEdgeEnhanceMode(uint32_t edgeEnhanceMode) { mEdgeEnhanceMode = edgeEnhanceMode; };
+  uint32_t getEdgeEnhanceMode() { return mEdgeEnhanceMode; };
+
+  void setEdgeEnhanceStrength(float edgeEnhanceStrength) { mEdgeEnhanceStrength = edgeEnhanceStrength; };
+  float getEdgeEnhanceStrength() { return mEdgeEnhanceStrength; };
+
   bool mAeLock;
   uint32_t mDeviceId;
   uint32_t mSensorMode;
@@ -66,6 +72,8 @@ public:
   std::vector<std::vector<float>> mAeRegions;
   uint32_t mDenoiseMode;
   float mDenoiseStrength;
+  uint32_t mEdgeEnhanceMode;
+  float mEdgeEnhanceStrength;
 
   std::vector<uint32_t> getOutputShape() {
     return { mVideoConverterResolution[HEIGHT_IDX], mVideoConverterResolution[WIDTH_IDX], getNumChannels() };
@@ -90,6 +98,8 @@ ArgusCameraConfig DEFAULT_DEVKIT_CONFIG()
     c.mExposureTimeRange = { EXPOSURE_DEFAULT_LOW,EXPOSURE_DEFAULT_HIGH };
     c.mDenoiseMode = 0;
     c.mDenoiseStrength = 0.0;
+    c.mEdgeEnhanceMode = 0;
+    c.mEdgeEnhanceStrength = 0.0;
     return c;
 }
 
