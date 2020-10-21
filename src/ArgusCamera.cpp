@@ -162,12 +162,14 @@ ArgusCamera *ArgusCamera::createArgusCamera(const ArgusCameraConfig &config, int
     case 1: denoiseMode = &DENOISE_MODE_FAST; break;
     case 2: denoiseMode = &DENOISE_MODE_HIGH_QUALITY; break;
   }
-  status = iDenoiseSettings->setDenoiseMode(*denoiseMode);
-  if (Argus::STATUS_OK != status) {
-    if (info) {
-      *info = 26;
+  if (denoiseMode) {
+    status = iDenoiseSettings->setDenoiseMode(*denoiseMode);
+    if (Argus::STATUS_OK != status) {
+      if (info) {
+        *info = 26;
+      }
+      return nullptr;
     }
-    return nullptr;
   }
   status = iDenoiseSettings->setDenoiseStrength(camera->mConfig.getDenoiseStrength());
   if (Argus::STATUS_OK != status) {
