@@ -146,6 +146,37 @@ ArgusCamera *ArgusCamera::createArgusCamera(const ArgusCameraConfig &config, int
   // enable output stream
   iRequest->enableOutputStream(camera->mStream.get());
 
+  /********************************************************************/
+  // NOISE REDUCTION AND EDGE ENHANCEMENT
+  auto iDenoiseSettings = interface_cast<IDenoiseSettings>(request);
+  if (!iDenoiseSettings) {
+    if (info) {
+      *info = 25; // failed to create request
+    }
+    return nullptr;
+  }
+  // set denoise
+  switch (camera->mConfig.getDenoiseMode()) {
+    case 0: DenoiseMode denoiseMode = DenoiseMode::DENOISE_MODE_OFF; break;
+    case 1: DenoiseMode denoiseMode = DenoiseMode::DENOISE_MODE_FAST; break;
+    case 2: DenoiseMode denoiseMode = DenoiseMode::DENOISE_MODE_HIGH_QUALITY; break;
+  }
+  status = iDenoiseSettings->setDenoiseMode(denoiseMode);
+  if (Argus::STATUS_OK != status) {
+    if (info) {
+      *info = 26;
+    }
+    return nullptr;
+  }
+  status = iDenoiseSettings->setDenoiseStrength(camera->mConfig.getDenoiseStrength());
+  if (Argus::STATUS_OK != status) {
+    if (info) {
+      *info = 26;
+    }
+    return nullptr;
+  }
+
+  /********************************************************************/
   // configure source settings in request
   // 1. set sensor mode
   auto iCameraProperties = interface_cast<ICameraProperties>(cameraDevice);
