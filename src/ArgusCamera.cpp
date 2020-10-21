@@ -335,6 +335,8 @@ ArgusCamera *ArgusCamera::createArgusCamera(const ArgusCameraConfig &config, int
     }
     return nullptr;
   }
+  // set stream post processing
+  iStreamSettings->setPostProcessingEnable(true);
 
   // start repeating capture request
   status = iCaptureSession->repeat(request.get());
