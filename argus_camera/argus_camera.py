@@ -23,7 +23,8 @@ class ArgusCamera:
             edge_enhance_mode=0,
             edge_enhance_strength=0.0,
             isp_digital_gain_range = (0., 300.),
-            ae_antibanding_mode=0):
+            ae_antibanding_mode=0,
+            awb_lock):
 
         self.device_id = device_id
 
@@ -43,6 +44,7 @@ class ArgusCamera:
         self.config.setExposureCompensation(0)
         self.config.setGainRange(gain_range)
         self.config.setAeLock(False)
+        self.config.setAwbLock(awb_lock)
         self.config.setIspDigitalGainRange(isp_digital_gain_range)
         self.config.setAeAntibandingMode(ae_antibanding_mode)
 
