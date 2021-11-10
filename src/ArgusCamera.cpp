@@ -311,6 +311,7 @@ ArgusCamera *ArgusCamera::createArgusCamera(const ArgusCameraConfig &config, int
 
   const AwbMode *awb_mode;
   switch (camera->mConfig.getAwbMode()) {
+
     case 0: awb_mode = &AWB_MODE_OFF; break;
     case 1: awb_mode = &AWB_MODE_AUTO; break;
     case 2: awb_mode = &AWB_MODE_INCANDESCENT; break;
@@ -322,7 +323,8 @@ ArgusCamera *ArgusCamera::createArgusCamera(const ArgusCameraConfig &config, int
     case 8: awb_mode = &AWB_MODE_MANUAL; break;
   }
 
-  // set ae lock
+  std::cout << "awb mode: " << awb_mode << std::endl;
+  // set awb mode
   status = iAutoControlSettings->setAwbMode(*awb_mode);
   if (Argus::STATUS_OK != status) {
     if (info) {
