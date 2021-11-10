@@ -326,12 +326,10 @@ ArgusCamera *ArgusCamera::createArgusCamera(const ArgusCameraConfig &config, int
   status = iAutoControlSettings->setAwbMode(*awb_mode);
   if (Argus::STATUS_OK != status) {
     if (info) {
-      *info = 28;
+      *info = 50;
     }
     return nullptr;
   }
-
-
 
   // set gain range
   status = iSourceSettings->setGainRange(Argus::Range<float>(
