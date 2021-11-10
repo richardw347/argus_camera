@@ -41,6 +41,9 @@ public:
   void setAeRegions(std::vector<std::vector<float> > AeRegions) { mAeRegions = AeRegions; };
   std::vector<std::vector<float> > getAeRegions() { return mAeRegions; };
 
+  void setAwbMode(uint32_t mode) { mAwbMode = mode; };
+  uint32_t getAwbMode() { return mAwbMode; }
+
   void setAwbLock(bool AwbLock) { mAwbLock = AwbLock; };
   bool getAwbLock() { return mAwbLock; };
 
@@ -68,6 +71,7 @@ public:
   void setAeAntibandingMode(uint32_t aeAntibandingMode) { mAeAntibandingMode = aeAntibandingMode; };
   uint32_t getAeAntibandingMode() { return mAeAntibandingMode; };
 
+  uint32_t mAwbMode;
   bool mAwbLock;
   bool mAeLock;
   uint32_t mDeviceId;
@@ -98,6 +102,7 @@ public:
 ArgusCameraConfig DEFAULT_DEVKIT_CONFIG()
 {
     ArgusCameraConfig c;
+    c.mAwbMode = 0;
     c.mAwbLock = false;
     c.mAeLock = false;
     c.mDeviceId = 0;

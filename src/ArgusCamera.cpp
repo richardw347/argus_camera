@@ -299,15 +299,27 @@ ArgusCamera *ArgusCamera::createArgusCamera(const ArgusCameraConfig &config, int
     return nullptr;
   }
 
-    // set ae lock
-    status = iAutoControlSettings->setAwbLock(float(
-            camera->mConfig.getAwbLock()));
-    if (Argus::STATUS_OK != status) {
-        if (info) {
-            *info = 24;
-        }
-        return nullptr;
+  // set ae lock
+  status = iAutoControlSettings->setAwbLock(float(
+          camera->mConfig.getAwbLock()));
+  if (Argus::STATUS_OK != status) {
+      if (info) {
+          *info = 26;
+      }
+      return nullptr;
+  }
+
+  // set ae lock
+  status = iAutoControlSettings->setAwbMode(float(
+          camera->mConfig.getAwbMode()));
+  if (Argus::STATUS_OK != status) {
+    if (info) {
+      *info = 28;
     }
+    return nullptr;
+  }
+
+
 
   // set gain range
   status = iSourceSettings->setGainRange(Argus::Range<float>(
