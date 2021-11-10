@@ -24,7 +24,7 @@ class ArgusCamera:
             edge_enhance_strength=0.0,
             isp_digital_gain_range = (0., 300.),
             ae_antibanding_mode=0,
-            awb_lock):
+            awb_lock=False):
 
         self.device_id = device_id
 
