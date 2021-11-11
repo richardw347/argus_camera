@@ -71,11 +71,11 @@ public:
   void setAeAntibandingMode(uint32_t aeAntibandingMode) { mAeAntibandingMode = aeAntibandingMode; };
   uint32_t getAeAntibandingMode() { return mAeAntibandingMode; };
 
-  uint32_t mAwbMode;
   bool mAwbLock;
   bool mAeLock;
   uint32_t mDeviceId;
   uint32_t mSensorMode;
+  uint32_t mAwbMode;
   float mExposureCompensation;
   std::vector<uint32_t> mStreamResolution;
   std::vector<uint32_t> mVideoConverterResolution;
@@ -102,7 +102,6 @@ public:
 ArgusCameraConfig DEFAULT_DEVKIT_CONFIG()
 {
     ArgusCameraConfig c;
-    c.mAwbMode = 0;
     c.mAwbLock = false;
     c.mAeLock = false;
     c.mDeviceId = 0;
@@ -120,6 +119,7 @@ ArgusCameraConfig DEFAULT_DEVKIT_CONFIG()
     c.mEdgeEnhanceStrength = 0.0;
     c.mIspDigitalGainRange = {0.0, 300.0};
     c.mAeAntibandingMode = 0;
+    c.mAwbMode = 0;
     return c;
 }
 
