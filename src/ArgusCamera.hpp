@@ -41,6 +41,9 @@ public:
   void setAeRegions(std::vector<std::vector<float> > AeRegions) { mAeRegions = AeRegions; };
   std::vector<std::vector<float> > getAeRegions() { return mAeRegions; };
 
+  void setWbGains(std::vector<float> gains) { mWbGains = gains; };
+  std::vector<float> getWbGains() { return mWbGains; };
+
   void setAwbMode(uint32_t mode) { mAwbMode = mode; };
   uint32_t getAwbMode() { return mAwbMode; }
 
@@ -76,6 +79,7 @@ public:
   uint32_t mDeviceId;
   uint32_t mSensorMode;
   uint32_t mAwbMode;
+  std::vector<float> mWbGains;
   float mExposureCompensation;
   std::vector<uint32_t> mStreamResolution;
   std::vector<uint32_t> mVideoConverterResolution;
@@ -120,6 +124,7 @@ ArgusCameraConfig DEFAULT_DEVKIT_CONFIG()
     c.mIspDigitalGainRange = {0.0, 300.0};
     c.mAeAntibandingMode = 0;
     c.mAwbMode = 0;
+    c.mWbGains = 0;
     return c;
 }
 

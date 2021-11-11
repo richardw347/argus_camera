@@ -39,8 +39,7 @@ size_t ArgusCameraConfig::getOutputSizeBytes()
   return sizeof(uint8_t) * getNumChannels() * mVideoConverterResolution[0] * mVideoConverterResolution[1];
 }
 
-ArgusCamera *ArgusCamera::createArgusCamera(const ArgusCameraConfig &config, int *info)
-{
+ArgusCamera *ArgusCamera::createArgusCamera(const ArgusCameraConfig &config, int *info) {
   Argus::Status status;
 
   std::unique_ptr<ArgusCamera> camera;
@@ -68,7 +67,7 @@ ArgusCamera *ArgusCamera::createArgusCamera(const ArgusCameraConfig &config, int
   }
 
   // get camera device
-  vector<CameraDevice*> devices;
+  vector<CameraDevice *> devices;
   status = iCameraProvider->getCameraDevices(&devices);
   if (Argus::STATUS_OK != status) {
     if (info) {
@@ -107,8 +106,8 @@ ArgusCamera *ArgusCamera::createArgusCamera(const ArgusCameraConfig &config, int
   // set stream pixel format and resolution
   iOutputStreamSettings->setPixelFormat(Argus::PIXEL_FMT_YCbCr_420_888);
   auto evenResolution = Argus::Size2D<uint32_t>(
-    ROUND_UP_EVEN(camera->mConfig.mStreamResolution[WIDTH_IDX]),
-    ROUND_UP_EVEN(camera->mConfig.mStreamResolution[HEIGHT_IDX])
+          ROUND_UP_EVEN(camera->mConfig.mStreamResolution[WIDTH_IDX]),
+          ROUND_UP_EVEN(camera->mConfig.mStreamResolution[HEIGHT_IDX])
   );
   iOutputStreamSettings->setResolution(evenResolution);
   iOutputStreamSettings->setMetadataEnable(false);
@@ -159,9 +158,15 @@ ArgusCamera *ArgusCamera::createArgusCamera(const ArgusCameraConfig &config, int
   // set denoise
   const DenoiseMode *denoiseMode;
   switch (camera->mConfig.getDenoiseMode()) {
-    case 0: denoiseMode = &DENOISE_MODE_OFF; break;
-    case 1: denoiseMode = &DENOISE_MODE_FAST; break;
-    case 2: denoiseMode = &DENOISE_MODE_HIGH_QUALITY; break;
+    case 0:
+      denoiseMode = &DENOISE_MODE_OFF;
+          break;
+    case 1:
+      denoiseMode = &DENOISE_MODE_FAST;
+          break;
+    case 2:
+      denoiseMode = &DENOISE_MODE_HIGH_QUALITY;
+          break;
   }
   status = iDenoiseSettings->setDenoiseMode(*denoiseMode);
   if (Argus::STATUS_OK != status) {
@@ -189,9 +194,15 @@ ArgusCamera *ArgusCamera::createArgusCamera(const ArgusCameraConfig &config, int
   // set edge enhance
   const EdgeEnhanceMode *edgeEnhanceMode;
   switch (camera->mConfig.getEdgeEnhanceMode()) {
-    case 0: edgeEnhanceMode = &EDGE_ENHANCE_MODE_OFF; break;
-    case 1: edgeEnhanceMode = &EDGE_ENHANCE_MODE_FAST; break;
-    case 2: edgeEnhanceMode = &EDGE_ENHANCE_MODE_HIGH_QUALITY; break;
+    case 0:
+      edgeEnhanceMode = &EDGE_ENHANCE_MODE_OFF;
+          break;
+    case 1:
+      edgeEnhanceMode = &EDGE_ENHANCE_MODE_FAST;
+          break;
+    case 2:
+      edgeEnhanceMode = &EDGE_ENHANCE_MODE_HIGH_QUALITY;
+          break;
   }
   status = iEdgeEnhanceSettings->setEdgeEnhanceMode(*edgeEnhanceMode);
   if (Argus::STATUS_OK != status) {
@@ -214,7 +225,7 @@ ArgusCamera *ArgusCamera::createArgusCamera(const ArgusCameraConfig &config, int
   // configure source settings in request
   // 1. set sensor mode
   auto iCameraProperties = interface_cast<ICameraProperties>(cameraDevice);
-  vector<SensorMode*> sensorModes;
+  vector<SensorMode *> sensorModes;
   status = iCameraProperties->getAllSensorModes(&sensorModes);
   if (Argus::STATUS_OK != status ||
       camera->mConfig.getSensorMode() >= sensorModes.size()) {
@@ -235,8 +246,8 @@ ArgusCamera *ArgusCamera::createArgusCamera(const ArgusCameraConfig &config, int
 
   // 2. set frame duration
   status = iSourceSettings->setFrameDurationRange(Argus::Range<uint64_t>(
-    camera->mConfig.getFrameDurationRange()[0],
-    camera->mConfig.getFrameDurationRange()[1]
+          camera->mConfig.getFrameDurationRange()[0],
+          camera->mConfig.getFrameDurationRange()[1]
   ));
   if (Argus::STATUS_OK != status) {
     if (info) {
@@ -249,8 +260,8 @@ ArgusCamera *ArgusCamera::createArgusCamera(const ArgusCameraConfig &config, int
 
   // 3. set exposure time
   status = iSourceSettings->setExposureTimeRange(Argus::Range<uint64_t>(
-    camera->mConfig.getExposureTimeRange()[0],
-    camera->mConfig.getExposureTimeRange()[1]
+          camera->mConfig.getExposureTimeRange()[0],
+          camera->mConfig.getExposureTimeRange()[1]
   ));
   if (Argus::STATUS_OK != status) {
     if (info) {
@@ -261,7 +272,7 @@ ArgusCamera *ArgusCamera::createArgusCamera(const ArgusCameraConfig &config, int
 
   // set exposure compensation
   status = iAutoControlSettings->setExposureCompensation(float(
-    camera->mConfig.getExposureCompensation()));
+          camera->mConfig.getExposureCompensation()));
   if (Argus::STATUS_OK != status) {
     if (info) {
       *info = 21;
@@ -272,18 +283,32 @@ ArgusCamera *ArgusCamera::createArgusCamera(const ArgusCameraConfig &config, int
   // set autoexposure regions
   if (!(camera->mConfig.getAeRegions()).empty()) {
     vector<Argus::AcRegion> AeRegions;
-    for (vector<float>& AeRegion : camera->mConfig.getAeRegions())
+    for (vector<float> &AeRegion : camera->mConfig.getAeRegions())
       AeRegions.push_back(Argus::AcRegion(
-        static_cast<int>(AeRegion[0]),
-        static_cast<int>(AeRegion[1]),
-        static_cast<int>(AeRegion[2]),
-        static_cast<int>(AeRegion[3]),
-        AeRegion[4]
+              static_cast<int>(AeRegion[0]),
+              static_cast<int>(AeRegion[1]),
+              static_cast<int>(AeRegion[2]),
+              static_cast<int>(AeRegion[3]),
+              AeRegion[4]
       ));
     status = iAutoControlSettings->setAeRegions(AeRegions);
     if (Argus::STATUS_OK != status) {
       if (info) {
         *info = 22;
+      }
+      return nullptr;
+    }
+  }
+
+  const BayerTuple<float>& gains;
+  if (!(camera->mConfig.getWbGains()).empty()) {
+    for (int i=0; i<4; i++){
+      gains[i] = camera->mConfig.getWbGains()[i]
+    }
+    status = iAutoControlSettings->setWbGains(gains);
+    if (Argus::STATUS_OK != status) {
+      if (info) {
+        *info = 23;
       }
       return nullptr;
     }
