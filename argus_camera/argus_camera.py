@@ -50,6 +50,7 @@ class ArgusCamera:
         self.config.setAwbMode(awb_mode)
         self.config.setIspDigitalGainRange(isp_digital_gain_range)
         self.config.setAeAntibandingMode(ae_antibanding_mode)
+        self.config.getWbGains(wb_gains)
 
         # Set denoise and edge enhancement
         self.config.setDenoiseMode(denoise_mode)
