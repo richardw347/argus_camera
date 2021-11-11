@@ -124,7 +124,6 @@ ArgusCameraConfig DEFAULT_DEVKIT_CONFIG()
     c.mIspDigitalGainRange = {0.0, 300.0};
     c.mAeAntibandingMode = 0;
     c.mAwbMode = 0;
-    c.mWbGains = 0;
     return c;
 }
 
