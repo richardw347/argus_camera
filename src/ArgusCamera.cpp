@@ -309,29 +309,29 @@ ArgusCamera *ArgusCamera::createArgusCamera(const ArgusCameraConfig &config, int
       return nullptr;
   }
 
-  const AwbMode *awb_mode;
-  switch (camera->mConfig.getAwbMode()) {
+//  const AwbMode *awb_mode;
+//  switch (camera->mConfig.getAwbMode()) {
+//
+//    case 0: awb_mode = &AWB_MODE_OFF; break;
+//    case 1: awb_mode = &AWB_MODE_AUTO; break;
+//    case 2: awb_mode = &AWB_MODE_INCANDESCENT; break;
+//    case 3: awb_mode = &AWB_MODE_WARM_FLUORESCENT; break;
+//    case 4: awb_mode = &AWB_MODE_DAYLIGHT; break;
+//    case 5: awb_mode = &AWB_MODE_CLOUDY_DAYLIGHT; break;
+//    case 6: awb_mode = &AWB_MODE_TWILIGHT; break;
+//    case 7: awb_mode = &AWB_MODE_SHADE; break;
+//    case 8: awb_mode = &AWB_MODE_MANUAL; break;
+//  }
 
-    case 0: awb_mode = &AWB_MODE_OFF; break;
-    case 1: awb_mode = &AWB_MODE_AUTO; break;
-    case 2: awb_mode = &AWB_MODE_INCANDESCENT; break;
-    case 3: awb_mode = &AWB_MODE_WARM_FLUORESCENT; break;
-    case 4: awb_mode = &AWB_MODE_DAYLIGHT; break;
-    case 5: awb_mode = &AWB_MODE_CLOUDY_DAYLIGHT; break;
-    case 6: awb_mode = &AWB_MODE_TWILIGHT; break;
-    case 7: awb_mode = &AWB_MODE_SHADE; break;
-    case 8: awb_mode = &AWB_MODE_MANUAL; break;
-  }
-
-  std::cout << "awb mode: " << awb_mode << std::endl;
-  // set awb mode
-  status = iAutoControlSettings->setAwbMode(*awb_mode);
-  if (Argus::STATUS_OK != status) {
-    if (info) {
-      *info = 50;
-    }
-    return nullptr;
-  }
+//  std::cout << "awb mode: " << awb_mode << std::endl;
+//  // set awb mode
+//  status = iAutoControlSettings->setAwbMode(*awb_mode);
+//  if (Argus::STATUS_OK != status) {
+//    if (info) {
+//      *info = 50;
+//    }
+//    return nullptr;
+//  }
 
   // set gain range
   status = iSourceSettings->setGainRange(Argus::Range<float>(
