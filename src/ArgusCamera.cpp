@@ -300,18 +300,18 @@ ArgusCamera *ArgusCamera::createArgusCamera(const ArgusCameraConfig &config, int
     }
   }
 
+
+
+
   const BayerTuple<float> *gains;
   if (!(camera->mConfig.getWbGains()).empty()) {
-    for (int i=0; i<4; i++){
-      gains[i] = camera->mConfig.getWbGains()[i];
-    }
-    status = iAutoControlSettings->setWbGains(*gains);
-    if (Argus::STATUS_OK != status) {
-      if (info) {
-        *info = 23;
-      }
-      return nullptr;
-    }
+    status = iAutoControlSettings->setWbGains(BayerTuple<float>(
+            camera->mConfig.getWbGains()[0],
+            camera->mConfig.getWbGains()[1],
+            camera->mConfig.getWbGains()[2],
+            camera->mConfig.getWbGains()[3]
+    ));
+
   }
 
   // set ae lock
