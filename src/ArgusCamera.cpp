@@ -315,8 +315,8 @@ ArgusCamera *ArgusCamera::createArgusCamera(const ArgusCameraConfig &config, int
 
   }
 
-  Argus::BayerTuple< float > wb{ iAutoControlSettings->getWbGains() };
-  std::cout << "getWbGains: " << wb[ 0 ] << ", " << wb[ 1 ] << ", " << wb[ 2 ] << ", " << wb[ 3 ] << std::endl;
+  Argus::BayerTuple< float > wb2{ iAutoControlSettings->getWbGains() };
+  std::cout << "getWbGains: " << wb2[ 0 ] << ", " << wb2[ 1 ] << ", " << wb2[ 2 ] << ", " << wb2[ 3 ] << std::endl;
 
   // set ae lock
   status = iAutoControlSettings->setAeLock(float(
