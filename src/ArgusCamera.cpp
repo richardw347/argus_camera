@@ -300,7 +300,7 @@ ArgusCamera *ArgusCamera::createArgusCamera(const ArgusCameraConfig &config, int
     }
   }
 
-  const BayerTuple<float>& gains;
+  const BayerTuple<float> gains;
   if (!(camera->mConfig.getWbGains()).empty()) {
     for (int i=0; i<4; i++){
       gains[i] = camera->mConfig.getWbGains()[i]
