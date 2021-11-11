@@ -303,7 +303,8 @@ ArgusCamera *ArgusCamera::createArgusCamera(const ArgusCameraConfig &config, int
 
 
 
-  const BayerTuple<float> *gains;
+  Argus::BayerTuple< float > wb{ iAutoControlSettings->getWbGains() };
+  std::cout << "getWbGains: " << wb[ 0 ] << ", " << wb[ 1 ] << ", " << wb[ 2 ] << ", " << wb[ 3 ] << std::endl;
   if (!(camera->mConfig.getWbGains()).empty()) {
     status = iAutoControlSettings->setWbGains(BayerTuple<float>(
             camera->mConfig.getWbGains()[0],
